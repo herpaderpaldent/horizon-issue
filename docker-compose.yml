@@ -1,0 +1,25 @@
+version: '3'
+services:
+  php:
+    #image: serversideup/php:8.0-fpm-nginx
+    build:
+      context: .docker
+    volumes:
+      - ./example-app:/var/www/html:cached
+    env_file:
+      - .env
+
+  redis:
+    image: redis:6
+    command: "redis-server --appendonly yes"
+
+  horizon:
+    #image: serversideup/php:8.0-fpm-nginx
+    build:
+      context: .docker
+    # Switch to "webuser" before running `php artisan`
+    command: "su - webuser -c \"php artisan horizon\""
+    volumes:
+      - ./example-app:/var/www/html:cached
+    env_file:
+      - .env
